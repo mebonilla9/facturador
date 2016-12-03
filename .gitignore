@@ -1,0 +1,7 @@
+# carpeta del proyecto netbeans
+/nbproject/private/
+/nbproject/
+/build/
+/dist/
+/build.xml
+/manifest.mf
