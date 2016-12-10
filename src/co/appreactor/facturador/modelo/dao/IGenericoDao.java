@@ -5,6 +5,7 @@
  */
 package co.appreactor.facturador.modelo.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -13,9 +14,9 @@ import java.util.List;
  */
 public interface IGenericoDao<T> {
     
-    public void insertar(T entidad);
-    public void editar(T entidad);
-    public List<T> consultar();
-    public T consultar(Long id);
+    public void insertar(T entidad) throws SQLException;
+    public void editar(T entidad) throws SQLException;
+    public List<T> consultar() throws SQLException;
+    public T consultar(Long id) throws SQLException;
     
 }
