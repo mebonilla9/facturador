@@ -58,7 +58,7 @@ public class Producto {
         this.cantidad = cantidad;
     }
 
-    public boolean isEstado() {
+    public boolean getEstado() {
         return estado;
     }
 

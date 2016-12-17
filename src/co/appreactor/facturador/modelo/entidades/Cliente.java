@@ -67,7 +67,7 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public boolean isEstado() {
+    public boolean getEstado() {
         return estado;
     }
 
