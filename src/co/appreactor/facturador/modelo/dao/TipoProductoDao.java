@@ -39,7 +39,7 @@ public class TipoProductoDao implements IGenericoDao<TipoProducto> {
 
             sentencia = cnn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             sentencia.setObject(i++, entidad.getNombre());
-            sentencia.setObject(i++, entidad.getEstado());
+            sentencia.setObject(i++, entidad.isEstado());
             sentencia.executeUpdate();
             ResultSet resultado = sentencia.getGeneratedKeys();
             if (resultado.next()) {
@@ -58,7 +58,7 @@ public class TipoProductoDao implements IGenericoDao<TipoProducto> {
             String sql = "update TipoProducto set nombre = ?, estado = ? where TipoProducto= ?";
             sentencia = cnn.prepareStatement(sql);
             sentencia.setObject(i++, entidad.getNombre());
-            sentencia.setObject(i++, entidad.getEstado());
+            sentencia.setObject(i++, entidad.isEstado());
             sentencia.setObject(i++, entidad.getIdTipoProducto());
         } finally {
             BdConexion.desconectar(sentencia);
