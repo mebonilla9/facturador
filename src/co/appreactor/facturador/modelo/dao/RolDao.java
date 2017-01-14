@@ -68,7 +68,7 @@ public class RolDao implements IGenericoDao<Rol> {
         PreparedStatement sentencia = null;
         int i = 1;
         try {
-            String sql = "update roll set nombre = ?, estado = ? where id_rol = ?";
+            String sql = "update rol set nombre = ?, estado = ? where id_rol = ?";
             sentencia = cnn.prepareStatement(sql);
             sentencia.setObject(i++, entidad.getNombre());
             sentencia.setObject(i++, entidad.getEstado());
