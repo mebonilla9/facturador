@@ -9,12 +9,12 @@ package co.appreactor.facturador.negocio.vista;
  *
  * @author yefer
  */
-public class id_tipo_cliente extends javax.swing.JPanel {
+public class VistaCliente extends javax.swing.JPanel {
 
     /**
      * Creates new form VistaCliente
      */
-    public id_tipo_cliente() {
+    public VistaCliente() {
         initComponents();
     }
 
