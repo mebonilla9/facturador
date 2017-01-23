@@ -63,4 +63,12 @@ public final class BdConexion {
         }
     }
     
+    public static void confirmar(Connection cnn){
+        try {
+            cnn.commit();
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+    
 }

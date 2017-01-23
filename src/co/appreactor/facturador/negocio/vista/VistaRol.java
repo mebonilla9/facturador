@@ -5,6 +5,17 @@
  */
 package co.appreactor.facturador.negocio.vista;
 
+import co.appreactor.facturador.modelo.conexion.BdConexion;
+import co.appreactor.facturador.modelo.entidades.Rol;
+import co.appreactor.facturador.negocio.delegados.RolDelegado;
+import co.appreactor.facturador.negocio.excepciones.FacturadorException;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Lord_Nightmare
@@ -16,6 +27,10 @@ public class VistaRol extends javax.swing.JInternalFrame {
      */
     public VistaRol() {
         initComponents();
+    }
+    
+    private void iniciarTabla(){
+        imprimirTabla(consultarRoles());
     }
 
     /**
@@ -29,25 +44,30 @@ public class VistaRol extends javax.swing.JInternalFrame {
 
         RolNombre = new javax.swing.JLabel();
         RolEstado = new javax.swing.JLabel();
-        Nombre = new javax.swing.JTextField();
-        Estado = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblRoles = new javax.swing.JTable();
+        cboEstado = new javax.swing.JCheckBox();
 
         RolNombre.setText("Nombre Rol:");
 
         RolEstado.setText("Estado Rol:");
 
-        Nombre.addActionListener(new java.awt.event.ActionListener() {
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NombreActionPerformed(evt);
+                txtNombreActionPerformed(evt);
             }
         });
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -56,90 +76,145 @@ public class VistaRol extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblRoles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id rol", "Nombre", "Estado"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblRoles);
+
+        cboEstado.setText("Activo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator1))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(RolNombre)
-                            .addComponent(RolEstado))
-                        .addGap(29, 29, 29)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Nombre)
-                            .addComponent(Estado, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelar)))
+                        .addComponent(btnCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(RolNombre)
+                                    .addComponent(RolEstado))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cboEstado))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(RolNombre)
-                    .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Estado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(RolEstado))
-                .addGap(9, 9, 9)
+                    .addComponent(RolNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RolEstado)
+                    .addComponent(cboEstado))
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
                     .addComponent(btnGuardar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
-                .addGap(138, 138, 138))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NombreActionPerformed
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_NombreActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        insertarRol();
+        iniciarTabla();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void insertarRol(){
+        Connection cnn = null;
+        try {
+            // Crear un vo de Rol para recibir la informacion del formulario
+            Rol rolRegistrado = new Rol();
+            rolRegistrado.setNombre(txtNombre.getText());
+            rolRegistrado.setEstado(cboEstado.isSelected());
+            cnn = BdConexion.conectar();
+            new RolDelegado(cnn).insertar(rolRegistrado);
+            BdConexion.confirmar(cnn);
+        } catch (FacturadorException ex) {
+            System.out.println(ex.getMensaje());
+        } finally {
+            BdConexion.desconectar(cnn);
+        }
+    }
+    
+    private List<Rol> consultarRoles(){
+        Connection cnn = null;
+        List<Rol> listaRoles = new ArrayList<>();
+        try {
+            cnn = BdConexion.conectar();
+            listaRoles = new RolDelegado(cnn).consultar();
+            BdConexion.confirmar(cnn);
+        } catch (FacturadorException ex) {
+            System.out.println(ex.getMensaje());
+        } finally {
+            BdConexion.desconectar(cnn);
+        }
+        return listaRoles;
+    }
+    
+    private void imprimirTabla(List<Rol> lista){
+        tblRoles.removeAll();
+        DefaultTableModel modeloTabla = (DefaultTableModel) tblRoles.getModel();
+        for (int i = 0; i < lista.size(); i++) {
+            modeloTabla.addRow(obtenerFilaEntidad(lista.get(i)));
+        }
+    }
+    
+    private Object[] obtenerFilaEntidad(Rol rol){
+        Object[] fila = new Object[3];
+        fila[0] = rol.getIdRol();
+        fila[1] = rol.getNombre();
+        fila[2] = rol.getEstado();
+        return fila;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Estado;
-    private javax.swing.JTextField Nombre;
     private javax.swing.JLabel RolEstado;
     private javax.swing.JLabel RolNombre;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JCheckBox cboEstado;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblRoles;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

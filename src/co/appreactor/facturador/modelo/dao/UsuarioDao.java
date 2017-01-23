@@ -6,6 +6,7 @@
 package co.appreactor.facturador.modelo.dao;
 
 import co.appreactor.facturador.modelo.conexion.BdConexion;
+import co.appreactor.facturador.modelo.entidades.Rol;
 import co.appreactor.facturador.modelo.entidades.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,9 +30,7 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
 
     @Override
     public void insertar(Usuario entidad) throws SQLException {
-        
         PreparedStatement sentencia = null;
-        
         int i = 1;
         try {
             String sql = "insert into usuario(nombre,documento,telefono,direccion,correo,contrasena,estado,id_rol) values (?,?,?,?,?,?,?,?)";
@@ -43,7 +42,7 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
             sentencia.setObject(i++, entidad.getCorreo());
             sentencia.setObject(i++, entidad.getContrasena());
             sentencia.setObject(i++, entidad.getEstado());
-            //sentencia.setObject(i++, entidad.getIdRol());
+            sentencia.setObject(i++, entidad.getRol().getIdRol());
             sentencia.executeUpdate();
             ResultSet resultado = sentencia.getGeneratedKeys();
             if (resultado.next()) {
@@ -59,7 +58,7 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
         PreparedStatement sentencia = null;
         int i = 1;
         try {
-            String sql = "update usuario set nombre = ?, documento = ?,telefono = ?,direccion = ?,correo = ?,contrasena = ?,estado = ? where id_rol = ?";
+            String sql = "update usuario set nombre = ?, documento = ?,telefono = ?,direccion = ?,correo = ?,contrasena = ?,estado = ?, id_rol = ?  where id_usuario = ?";
             sentencia = cnn.prepareStatement(sql);
             sentencia.setObject(i++, entidad.getNombre());
             sentencia.setObject(i++, entidad.getDocumento());
@@ -68,7 +67,8 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
             sentencia.setObject(i++, entidad.getCorreo());
             sentencia.setObject(i++, entidad.getContrasena());
             sentencia.setObject(i++, entidad.getEstado());
-            //sentencia.setObject(i++, entidad.getIdRol());
+            sentencia.setObject(i++, entidad.getRol().getIdRol());
+            sentencia.setObject(i++, entidad.getIdUsuario());
             sentencia.executeUpdate();
         } finally {
             BdConexion.desconectar(sentencia);
@@ -93,7 +93,7 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
                 usuario.setCorreo(result.getString("correo"));
                 usuario.setContrasena(result.getString("contrasena"));
                 usuario.setEstado(result.getBoolean("estado"));
-                //usuario.setIdRol(result.getLong("id_rol"));
+                usuario.setRol(new Rol(result.getLong("id_rol")));
                 lista.add(usuario);
             }
         } finally {
@@ -120,7 +120,7 @@ public class UsuarioDao implements IGenericoDao<Usuario> {
                 usuario.setCorreo(result.getString("correo"));
                 usuario.setContrasena(result.getString("contrasena"));
                 usuario.setEstado(result.getBoolean("estado"));
-                //usuario.setIdRol(result.getLong("id_rol"));
+                usuario.setRol(new Rol(result.getLong("id_rol")));
             }
         } finally {
             BdConexion.desconectar(sentencia);
