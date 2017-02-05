@@ -5,6 +5,7 @@
  */
 package co.appreactor.facturador.negocio.delegados;
 
+import co.appreactor.facturador.modelo.dao.ProductoDao;
 import co.appreactor.facturador.modelo.entidades.Producto;
 import co.appreactor.facturador.negocio.excepciones.FacturadorException;
 import java.sql.Connection;
@@ -15,9 +16,12 @@ import java.sql.Connection;
  */
 public class ProductoDelegado  extends GenericoDelegado <Producto>{
     
+    private final ProductoDao productoDao;
     public ProductoDelegado(Connection cnn) throws FacturadorException {
         super(cnn);
         
+        productoDao = new ProductoDao(cnn);
+        genericoDao = productoDao;
     }
     
     
