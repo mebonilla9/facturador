@@ -1,6 +1,7 @@
 package co.appreactor.facturador.modelo.dao;
 
 import co.appreactor.facturador.modelo.entidades.TipoCliente;
+import java.sql.Connection;
 import java.util.List;
 
 
@@ -16,6 +17,13 @@ import java.util.List;
  */
 
 public class TipoClienteDao implements IGenericoDao<TipoCliente>{
+    
+    private final int ID = 1;
+    private final Connection cnn;
+    
+    public TipoClienteDao(Connection cnn) {
+       this.cnn = cnn;
+    }
 
     @Override
     public void insertar(TipoCliente entidad) {
